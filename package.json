@@ -1,0 +1,55 @@
+{
+  "name": "iterm2",
+  "version": "0.1.0",
+  "description": "TypeScript API for controlling iTerm2",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "proto"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts --clean",
+    "proto:generate": "protoc --plugin=./node_modules/.bin/protoc-gen-ts_proto --ts_proto_out=./src/generated --ts_proto_opt=outputServices=false --ts_proto_opt=esModuleInterop=true --ts_proto_opt=useOptionals=messages --ts_proto_opt=oneof=unions --ts_proto_opt=forceLong=string -I./proto proto/api.proto",
+    "proto:check": "npm run proto:generate && git diff --exit-code src/generated/",
+    "test": "vitest run",
+    "test:unit": "vitest run tests/unit",
+    "test:integration": "vitest run tests/integration --testTimeout=30000",
+    "test:watch": "vitest watch",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build && npm test"
+  },
+  "dependencies": {
+    "@bufbuild/protobuf": "^2.10.2",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "@types/ws": "^8.5.13",
+    "ts-proto": "^2.6.1",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.3",
+    "vitest": "^2.1.8"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "os": [
+    "darwin"
+  ],
+  "keywords": [
+    "iterm2",
+    "terminal",
+    "macos",
+    "automation"
+  ],
+  "license": "MIT"
+}
